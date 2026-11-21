@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="kk"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark">
+<title>Ұрпақтар таразысы — құқықтық тренажер</title>
+<style>
+:root{--bg:#062424;--panel:#0d3634;--panel2:#114240;--white:#f2fff9;--muted:#c4ddd7;--line:#35655f;--aqua:#50e2d3;--gold:#ffe19b;--warm:#f3b67b;--bad:#ff9b85;--good:#8df2b4;color-scheme:dark}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 55% -24%,#226e68 0,transparent 55%),linear-gradient(140deg,#062222 0,#092f2e 58%,#082525 100%);color:var(--white);font-family:system-ui,-apple-system,'Segoe UI',Arial,sans-serif;font-size:15px;line-height:1.5}
+body:before{content:'';position:fixed;inset:0;pointer-events:none;opacity:.12;background-image:radial-gradient(#bcf7d5 .6px,transparent 1px);background-size:22px 22px}
+.wrap{max-width:1500px;margin:auto;padding:22px 22px 40px;position:relative}
+button{font-family:inherit;cursor:pointer;color:inherit}button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid #ffe3a9;outline-offset:3px}
+.kicker{font-size:12px;font-weight:850;letter-spacing:.16em;color:#a9f6dd;margin-bottom:8px}
+h1{font-size:clamp(26px,3vw,44px);line-height:1.05;letter-spacing:-.03em;margin:0 0 8px;font-weight:900}
+.subtitle{color:#cfebe5;margin:0;font-size:clamp(13px,1.4vw,16px)}
+.header{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:14px}
+.small-btn{background:#183f3d;border:1px solid #4c7c74;border-radius:11px;padding:9px 13px;font-size:13px;font-weight:730;color:#eafbf5;min-height:40px}
+.small-btn:hover{background:#255955}.small-btn[disabled]{opacity:.45;cursor:not-allowed}
+.primary{background:linear-gradient(145deg,#81f3d8,#3ddac9);color:#0b302d;border:0;border-radius:13px;padding:11px 18px;font-weight:850;font-size:14px;min-height:46px}
+.primary:hover{filter:brightness(1.06)}.primary[disabled]{opacity:.45;cursor:not-allowed;filter:none}
+/* Adal azamat strip */
+.adal{display:flex;gap:8px;flex-wrap:wrap;align-items:center;background:#0f3936;border:1px solid #3b7068;border-radius:14px;padding:10px 12px;margin-bottom:14px}
+.adal b{font-size:12px;letter-spacing:.1em;color:var(--gold);margin-right:4px}
+.val{font-size:12px;font-weight:750;padding:5px 9px;border-radius:999px;border:1px solid #4c7c74;color:#cfe9e2;background:#123f3c;transition:all .25s}
+.val.on{background:linear-gradient(145deg,#ffe19b,#f3c66b);color:#2c2108;border-color:#ffe19b;box-shadow:0 0 0 2px #ffe19b33}
+/* cases */
+.cases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:16px}
+.case{display:flex;gap:12px;align-items:center;text-align:left;border:1px solid #39746e;background:linear-gradient(145deg,#144643,#103531);border-radius:15px;padding:12px 14px;min-height:70px}
+.case:hover{background:#1d5450}.case[aria-selected=true]{border-color:#a1ffe2;background:linear-gradient(145deg,#2a7e72,#18574b);box-shadow:0 0 0 2px #a0ffdc50}
+.case .ic{font-size:26px}.case strong{display:block;font-size:16px}.case small{display:block;font-size:12px;color:#bbdacf}
+/* main */
+.main{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:18px;align-items:start}
+.left{display:flex;flex-direction:column;gap:12px}
+.scene{position:relative;aspect-ratio:16/9;background:#081c1b;border:2px solid #4a8d7f;border-radius:20px;overflow:hidden;box-shadow:0 14px 45px #001a1a99}
+.scene video,.scene .poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#06221e}
+.scene video{z-index:1;transition:opacity .15s}.scene video.hidden{opacity:0}
+.scene .ov-top{position:absolute;z-index:4;top:12px;left:12px;right:12px;display:flex;justify-content:space-between;gap:8px;pointer-events:none}
+.tag{padding:6px 11px;border:1px solid #ffffff90;border-radius:10px;background:#092f2fc4;backdrop-filter:blur(7px);font-size:12px;font-weight:800}
+.year-big{font-size:clamp(18px,2.2vw,28px);font-weight:950;letter-spacing:-.02em;padding:4px 12px}
+.scene .ov-bot{position:absolute;z-index:4;bottom:12px;left:12px;right:12px;display:flex;justify-content:space-between;align-items:flex-end;gap:10px;pointer-events:none}
+.cap{background:linear-gradient(90deg,#07302de6,#08312ab0);backdrop-filter:blur(6px);border-radius:11px;padding:9px 12px;border:1px solid #ffffff44;max-width:70%}
+.cap strong{display:block;font-size:clamp(12px,1.3vw,16px)}.cap span{display:block;font-size:12px;color:#e1eee8}
+.envpct{font-variant-numeric:tabular-nums;font-size:clamp(18px,2vw,26px);font-weight:950;padding:6px 11px}
+.loading{position:absolute;inset:0;z-index:6;display:grid;place-content:center;text-align:center;background:#0d3130;font-weight:800;gap:6px}.loading small{font-weight:500;color:#b7dbcf}.loading.hide{display:none}
+.card{background:linear-gradient(165deg,#124441f0,#092e2d);border:1px solid #3c776d;border-radius:18px;padding:16px}
+.scale-row{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:12px;align-items:center}
+.scale-svg{width:100%;height:auto;display:block}
+.idx{text-align:center}
+.idx .num{font-size:52px;font-weight:950;letter-spacing:-.05em;line-height:1;color:#d0fff3;font-variant-numeric:tabular-nums}.idx .num small{font-size:20px;color:#9fe9da}
+.lbl{font-size:11px;font-weight:900;letter-spacing:.12em;color:#b3f2d7;text-transform:uppercase}
+.idx p{margin:6px 0 0;font-size:12px;color:#c6e2da}
+/* steps */
+.panel{background:linear-gradient(165deg,#124441f0,#092e2d);border:1px solid #3c776d;border-radius:20px;padding:18px;min-width:0}
+.stepper{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;margin-bottom:14px}
+.st{min-width:0;white-space:nowrap;overflow:hidden;border:1px solid #3f736b;background:#123b38;border-radius:10px;padding:7px 4px;font-size:11.5px;font-weight:780;color:#cfe9e2;display:flex;gap:6px;align-items:center;justify-content:center}
+.st .n{display:inline-grid;place-content:center;width:20px;height:20px;border-radius:50%;background:#1f5a54;font-size:11px}
+.st[aria-current=step]{background:#2a7e72;border-color:#a1ffe2;color:#fff}.st.done .n{background:#8df2b4;color:#0b302d}
+.st[disabled]{opacity:.45;cursor:not-allowed}
+.step h2{font-size:20px;margin:0 0 4px;letter-spacing:-.01em}.step .lead{color:#cfe7e0;margin:0 0 12px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}
+.stat{background:#0f312f;border:1px solid #37645e;border-radius:12px;padding:10px}.stat b{display:block;font-size:22px;color:var(--gold);font-variant-numeric:tabular-nums}.stat span{font-size:12px;color:#c6e2da}
+.role{display:inline-block;font-size:12px;font-weight:800;color:#0b302d;background:var(--aqua);border-radius:8px;padding:4px 9px;margin-bottom:10px}
+.norms{display:grid;gap:8px;margin:10px 0}
+.norm{border-left:4px solid var(--gold);background:#0f312f;border-radius:10px;padding:10px 12px}.norm b{display:block;font-size:13px;color:var(--gold)}.norm p{margin:3px 0 0;font-size:14px}
+.norm.prop{border-left-color:var(--aqua)}.norm.prop b{color:var(--aqua)}
+.q{background:#0f2f2d;border:1px solid #37645e;border-radius:13px;padding:12px;margin:10px 0}
+.q .qt{font-weight:780;margin:0 0 8px}.q .qn{font-size:11px;font-weight:900;letter-spacing:.1em;color:#a4f4df;text-transform:uppercase}
+.opts{display:grid;gap:6px}
+.opt{text-align:left;border:1px solid #4a7b73;background:#143f3c;border-radius:10px;padding:9px 11px;font-size:14px}
+.opt:hover{background:#1b4c48}.opt.sel{border-color:#ffe19b}.opt.ok{border-color:var(--good);background:#174a3a}.opt.no{border-color:var(--bad);background:#4a2a25}
+.fb{font-size:13px;margin:8px 0 0;padding:8px 10px;border-radius:9px;background:#0b2a28;color:#dff5ee;display:none}.fb.show{display:block}
+.fb.good{border-left:3px solid var(--good)}.fb.bad{border-left:3px solid var(--bad)}
+.ev{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.evc{text-align:left;border:1px solid #4a7b73;background:#143f3c;border-radius:12px;padding:10px 11px;font-size:14px}
+.evc .t{display:block;font-size:11px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;margin-bottom:3px}
+.evc.benefit .t{color:var(--gold)}.evc.risk .t{color:var(--warm)}.evc.alt .t{color:var(--aqua)}.evc.sel{border-color:#ffe19b;box-shadow:0 0 0 2px #ffe19b44}
+.dec{display:grid;gap:8px}
+.dc{text-align:left;border:1px solid #4a7b73;background:#143f3c;border-radius:13px;padding:11px 13px}
+.dc:hover{background:#1b4c48}.dc.sel{border-color:#ffe19b;background:#1f4d45;box-shadow:0 0 0 2px #ffe19b44}
+.dc .letter{display:inline-grid;place-content:center;width:24px;height:24px;border-radius:7px;background:#ffe19b;color:#2c2108;font-weight:900;font-size:13px;margin-right:7px}
+.dc strong{font-size:15px}.dc .basis{display:block;font-size:12px;color:#a8f0dc;margin-top:5px}.dc .basis:before{content:'⚖ Құқықтық негізі: ';color:var(--gold);font-weight:800}
+.conds{display:grid;gap:6px;margin-top:10px}
+.cond{display:flex;gap:9px;align-items:flex-start;border:1px solid #3f6f68;background:#102f2d;border-radius:10px;padding:8px 10px;font-size:14px;cursor:pointer}
+.cond input{margin-top:3px;width:17px;height:17px;accent-color:#50e2d3}.cond small{display:block;color:#a8d9cc;font-size:12px}
+.cond.off{opacity:.4;cursor:not-allowed}
+textarea{width:100%;min-height:84px;resize:vertical;background:#0e2d2b;color:#f0fff8;border:1px solid #4e8379;border-radius:12px;padding:10px;font-family:inherit;font-size:14px}
+.nav{display:flex;justify-content:space-between;gap:8px;margin-top:14px;flex-wrap:wrap}
+.hint{font-size:12px;color:#bcd8cf}
+.verdict{border:1px solid #ffe19b88;background:linear-gradient(160deg,#2a3f2a,#14332f);border-radius:14px;padding:13px 14px;margin-bottom:12px}
+.verdict .lbl{color:var(--gold)}.verdict p{margin:6px 0 0}
+.years{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:8px 0}
+.yb{border:1px solid #4a7b73;background:#143f3c;border-radius:10px;padding:7px 4px;font-weight:850;font-size:14px;text-align:center}
+.yb small{display:block;font-weight:600;font-size:11px;color:#bcd8cf}.yb.sel{background:#2a7e72;border-color:#a1ffe2}
+.tl-ctrl{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.switch{display:flex;gap:8px;align-items:center;font-size:13px;cursor:pointer}.switch input{width:17px;height:17px;accent-color:#f3b67b}
+.metrics{display:grid;gap:7px;margin:12px 0}
+.m{display:grid;grid-template-columns:150px 1fr 34px;gap:8px;align-items:center;font-size:13px}
+.bar{height:9px;background:#0b2826;border-radius:99px;overflow:hidden;border:1px solid #2f5e58}.bar i{display:block;height:100%;background:linear-gradient(90deg,#3ddac9,#a7f7d6);border-radius:99px;transition:width .5s}
+.m b{text-align:right;font-variant-numeric:tabular-nums}
+.badges{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:10px 0}
+.badge{border:1px solid #3f6f68;border-radius:11px;padding:8px 10px;font-size:13px;background:#102f2d;opacity:.55}
+.badge.on{opacity:1;border-color:#ffe19b;background:#2c3a22}.badge b{display:block;font-size:13px}.badge span{font-size:12px;color:#d6e7d9}
+.law{border:1px dashed #50e2d3;border-radius:13px;padding:12px 14px;background:#0d302d;margin-top:12px}.law h3{margin:0 0 6px;font-size:15px;color:var(--aqua)}.law ul{margin:0;padding-left:18px}.law li{margin:3px 0}
+.quote{font-style:italic;color:#e9fff6;border-left:3px solid var(--aqua);padding-left:10px;margin:8px 0}
+.sheet{background:#0e2d2b;border:1px solid #3f6f68;border-radius:13px;padding:13px;white-space:pre-wrap;font-size:13px;max-height:420px;overflow:auto}
+.val.pop{transform:scale(1.12)}
+.toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,30px);opacity:0;z-index:50;background:linear-gradient(145deg,#ffe19b,#f3c66b);color:#2c2108;font-weight:800;padding:11px 16px;border-radius:12px;box-shadow:0 10px 30px #0008;transition:all .35s;max-width:92vw;font-size:14px;pointer-events:none}.toast.show{opacity:1;transform:translate(-50%,0)}
+.footer{color:#b3d4cb;font-size:12px;margin-top:16px}
+.free h3{margin:0 0 8px;font-size:14px;color:var(--gold);letter-spacing:.02em}
+.range{appearance:none;-webkit-appearance:none;width:100%;height:16px;border-radius:99px;border:1px solid #d1f9e357;outline:0;cursor:pointer;background:linear-gradient(to right,#29e2dc 0%,#29e2dc var(--p,100%),#a77849 var(--p,100%),#a77849 100%)}
+.range::-webkit-slider-thumb{-webkit-appearance:none;width:30px;height:30px;border-radius:50%;background:#eafff9;border:5px solid #37cfc1;box-shadow:0 3px 12px #0008}
+.range::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:#eafff9;border:5px solid #37cfc1}
+.rl{display:flex;justify-content:space-between;font-size:12px;color:#cce5de;font-weight:700;margin:8px 0 10px}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.fgrid4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:8px}
+.action{border:0;border-radius:13px;min-height:48px;padding:9px 8px;font-size:14px;font-weight:850}
+.drain{background:linear-gradient(145deg,#ffca82,#f0a963);color:#31230d}.fill{background:linear-gradient(145deg,#81f3d8,#3ddac9);color:#0b302d}
+.action.playing{box-shadow:0 0 0 3px #ffffffaa}
+.speed{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12px;color:#c6e6d8;margin-top:8px}.speed select{background:#174643;color:#f2fff5;border:1px solid #4a7974;border-radius:9px;padding:6px 8px;font-size:12px}
+.stageinfo .top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.stageinfo strong{font-size:16px}.stageinfo p{margin:4px 0 0;font-size:14px;color:#d4eee5}
+.pill{font-size:12px;font-weight:850;padding:5px 9px;border-radius:8px;background:#32837b;white-space:nowrap}
+.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}.fact{background:#102e2d;border:1px solid #37645e;border-radius:12px;padding:9px 10px}.fact b{display:block;font-size:13px;color:#8df2d9;margin-bottom:3px}.fact span{font-size:13px;color:#e7f2ee}
+.sq{margin:10px 0 0;font-size:14px;font-weight:750;color:#f5ffef}.sq:before{content:'❓ '}
+@media(max-width:680px){.facts{grid-template-columns:1fr}.fgrid4{grid-template-columns:1fr 1fr}}
+.lock{padding:18px;border:1px dashed #4c7c74;border-radius:13px;color:#cfe7e0;text-align:center}
+@media(max-width:1100px){.main{grid-template-columns:1fr}.left{position:static}}
+@media(max-width:680px){.wrap{padding:12px 10px 30px}.cases{grid-template-columns:1fr;gap:7px}.case{min-height:56px;padding:9px 12px}.stats{grid-template-columns:1fr 1fr 1fr}.stat b{font-size:17px}.ev{grid-template-columns:1fr}.badges{grid-template-columns:1fr}.m{grid-template-columns:118px 1fr 30px;font-size:12px}.scale-row{grid-template-columns:1fr}.st .tx{display:none}.panel{padding:13px}.cap{max-width:62%}.cap span{display:none}.tag{font-size:10px;padding:4px 7px}}
+@media print{body{background:#fff;color:#000}body:before,.left,.cases,.adal,.stepper,.nav,.header .small-btn,.step:not(#step7){display:none!important}.main{display:block}.panel{border:0;background:none}.sheet{max-height:none;color:#000;background:#fff;border:1px solid #999}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style></head><body>
+<div class="wrap" id="app">
+ <header class="header">
+  <div><div class="kicker">ҒЫЛЫМИ ЖОБАНЫҢ ПРАКТИКАЛЫҚ ӨНІМІ • ҚҰҚЫҚТЫҚ ТРЕНАЖЕР</div>
+  <h1>⚖️ Ұрпақтар таразысы</h1>
+  <p class="subtitle">Сіз — қоғамдық кеңес мүшесісіз. Нормаға сүйеніп шешім қабылдаңыз да, оның 25, 50 және 100 жылдан кейінгі салдарын көріңіз.</p></div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="primary" id="demoBtn" type="button" title="Барлық қадамды үлгі жауаптармен толтырып, бірден Болашақ сотының үкімін ашады">🎬 Демо: бірден үкімге</button><button class="small-btn" id="fsBtn" type="button">⛶ Толық экран</button></div>
+ </header>
+ <div class="adal" aria-label="Адал азамат құндылықтары"><b>«АДАЛ АЗАМАТ» <span id="adalCount">0 / 6</span></b>
+  <span class="val" data-v="just">Әділдік және жауапкершілік</span><span class="val" data-v="law">Заң және тәртіп</span><span class="val" data-v="patr">Тәуелсіздік және отаншылдық</span><span class="val" data-v="unity">Бірлік және ынтымақ</span><span class="val" data-v="work">Еңбекқорлық және кәсіби біліктілік</span><span class="val" data-v="crea">Жасампаздық және жаңашылдық</span>
+  <span class="hint" style="flex-basis:100%">Құндылықтар сіздің әрекетіңізге қарай жанады. Тінтуірді құндылықтың үстіне апарсаңыз, оны қалай ашуға болатыны көрсетіледі.</span>
+ </div>
+ <nav class="cases" role="tablist" aria-label="Жағдаятты таңдаңыз" id="cases"></nav>
+ <div class="main">
+  <div class="left">
+   <div class="scene" id="scene" aria-label="Шешімнің табиғатқа салдарын көрсететін бейне">
+    <img class="poster" id="poster" alt=""/>
+    <video id="vF" muted playsinline preload="auto"></video>
+    <video id="vR" muted playsinline preload="auto" class="hidden"></video>
+    <div class="loading" id="loading"><div>🌿 Бейне ашылуда…</div><small>Бейнелер осы файлдың ішінде сақталған</small></div>
+    <div class="ov-top"><span class="tag" id="sceneLabel">—</span><span class="tag year-big" id="yearTag">2026</span></div>
+    <div class="ov-bot"><div class="cap"><strong id="capTitle">Бүгінгі жағдай</strong><span id="capSub">Шешім әлі қабылданған жоқ</span></div><span class="tag envpct" id="envTag">100%</span></div>
+   </div>
+   <div class="card free" aria-label="Экоөзгерістерді еркін бақылау">
+    <h3>🔬 Еркін бақылау: экоөзгерістер басынан соңына дейін</h3>
+    <input class="range" id="lvl" type="range" min="0" max="100" value="100" step="1" aria-label="Ортаның жағдайы">
+    <div class="rl"><span>0% · қатты тозған</span><span>100% · табиғи күйі</span></div>
+    <div class="fgrid"><button class="action drain" id="declineBtn" type="button">↘ Нашарлату</button><button class="action fill" id="recoverBtn" type="button">↗ Кері қайтару</button></div>
+    <div class="fgrid4"><button class="small-btn" id="pauseBtn" type="button">⏸ Тоқтату</button><button class="small-btn" id="beforeBtn" type="button">🌱 Басында</button><button class="small-btn" id="afterBtn" type="button">🌵 Соңында</button><button class="small-btn" id="backDec" type="button" title="Шешімнің көрінісіне оралу">⚖ Шешімге</button></div>
+    <div class="speed"><label for="speed">Көрініс жылдамдығы</label><select id="speed"><option value="0.5">Баяу · 0,5×</option><option value="1" selected>Қалыпты · 1×</option><option value="1.5">Жылдам · 1,5×</option><option value="2">Өте жылдам · 2×</option></select></div>
+   </div>
+   <div class="card stageinfo" aria-live="polite">
+    <div class="top"><div><strong id="stH">—</strong><p id="stD">—</p></div><span class="pill" id="stP">1 / 5 кезең</span></div>
+    <div class="facts"><div class="fact"><b id="f1t">—</b><span id="f1">—</span></div><div class="fact"><b id="f2t">—</b><span id="f2">—</span></div><div class="fact"><b id="f3t">—</b><span id="f3">—</span></div></div>
+    <p class="sq" id="stQ">—</p>
+   </div>
+   <div class="card scale-row">
+    <svg class="scale-svg" id="scaleSvg" viewBox="-14 0 348 170" role="img" aria-label="Таразы: бүгінгі пайда және болашақ ұрпақ">
+     <rect x="150" y="40" width="20" height="110" rx="4" fill="#3c776d"/><rect x="105" y="148" width="110" height="14" rx="7" fill="#3c776d"/>
+     <g id="beam"><rect x="40" y="34" width="240" height="10" rx="5" fill="#ffe19b"/><circle cx="160" cy="39" r="9" fill="#f3c66b"/></g>
+     <g id="panL"><line x1="0" y1="0" x2="-22" y2="46" stroke="#cfe9e2" stroke-width="2"/><line x1="0" y1="0" x2="22" y2="46" stroke="#cfe9e2" stroke-width="2"/><path d="M-36 46 h72 a36 16 0 0 1 -72 0z" fill="#f3b67b"/><text x="0" y="78" text-anchor="middle" font-size="12" font-weight="800" fill="#f3b67b">Бүгінгі пайда</text><text id="lv" x="0" y="60" text-anchor="middle" font-size="13" font-weight="900" fill="#2c2108">—</text></g>
+     <g id="panR"><line x1="0" y1="0" x2="-22" y2="46" stroke="#cfe9e2" stroke-width="2"/><line x1="0" y1="0" x2="22" y2="46" stroke="#cfe9e2" stroke-width="2"/><path d="M-36 46 h72 a36 16 0 0 1 -72 0z" fill="#50e2d3"/><text x="0" y="78" text-anchor="middle" font-size="12" font-weight="800" fill="#50e2d3">Болашақ ұрпақ</text><text id="rv" x="0" y="60" text-anchor="middle" font-size="13" font-weight="900" fill="#0b302d">—</text></g>
+    </svg>
+    <div class="idx"><div class="lbl">Болашақ ұрпақ индексі</div><div class="num"><span id="idxNum">—</span><small>/100</small></div><p id="idxNote">Шешім қабылдағаннан кейін есептеледі</p></div>
+   </div>
+  </div>
+  <section class="panel" aria-live="polite">
+   <div class="stepper" id="stepper"></div>
+   <div id="stepBody"></div>
+  </section>
+ </div>
+ <p class="footer">Жағдаяттар, сандар мен индекс — шартты оқу материалдары, ресми заңгерлік қорытынды немесе экологиялық болжам емес. Бейне ықтимал салдарды көрнекі түсіндіруге арналған. Нормалар ғылыми жұмыста талданған құжаттарға сүйенеді: ҚР Конституциясы (2026), ҚР Экология кодексі (2021), Орхус конвенциясы (1998). «Жоба ұсынысы» деп белгіленгендер — авторлардың заңнамалық ұсыныстары. Авторлары: Нуржау Алимансұр, Досанқұл Нұрмұхаммед; жетекшісі Курманбаева Ж.Е.</p>
+</div>
+<script>window.POSTERS={"lake": "assets/lake.webp", "pollution": "assets/pollution.webp", "forest": "assets/forest.webp"};</script>
+
+
+
+
+
+
+<script>
+(()=>{'use strict';
+const $=id=>document.getElementById(id),clamp=(x,a,b)=>Math.min(b,Math.max(a,x)),esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const YEARS=[2026,2051,2076,2126],YL=['Қазір','+25 жыл','+50 жыл','+100 жыл'];
+const WEIGHTS={lake:[[0,100],[3.0,98],[4.0,84],[5.2,52],[6.5,18],[9.96,0]],pollution:[[0,100],[2.5,98],[3.5,81],[4.7,55],[6.7,17],[9.96,0]],forest:[[0,100],[2.5,98],[3.4,81],[4.8,51],[6.6,17],[9.96,0]]};
+const D=9.96;
+const VIEWS={
+ lake:{label:'КӨЛ ТІРШІЛІГІ',icon:'💧',control:'КӨЛ ЭКОЖҮЙЕСІНІҢ ЖАҒДАЙЫ',hint:'«Нашарлату» — көл суы тартылады. «Кері қайтару» — бейне бастапқы қалпына оралады.',facts:['💧 Су айдыны','🐟 Балықтар мен құстар','⚖️ Болашаққа ықпалы'],weights:[[0,100],[3.0,98],[4.0,84],[5.2,52],[6.5,18],[9.96,0]], stages:[
+ ['Тіршілікке толы көл','Балықтар, құстар мен өсімдіктер','Көлдегі табиғи тіршілік сақталған','Су жеткілікті, балықтар еркін жүзеді, құстар мен өсімдіктерге қолайлы орта бар.','Су айдыны қалыпты, ылғал жеткілікті.','Балықтар мен су құстары тіршілік етеді.','Табиғи су қорын сақтау — ортақ міндет.','Су көздерінің сақталуы келесі ұрпақ үшін неліктен маңызды?'],
+ ['Көл суы азая бастады','Жағалау біртіндеп шегінеді','Судың тартылуы байқалды','Су деңгейі төмендеп, тіршілік ететін кеңістік кішірейе бастайды.','Таяз жерлер көбейеді.','Жануарлардың мекені тарыла бастайды.','Суды ұқыпты тұтыну мен қорғау шаралары қажет.','Судың азаюына адамның қандай әрекеттері әсер етуі мүмкін?'],
+ ['Су айдыны едәуір тарылды','Балықтардың мекені азайды','Көлдегі тіршілікке қауіп өсті','Көл таяздағанда балықтар мен құстардың тіршілік жағдайы нашарлайды.','Су айдынының үлкен бөлігі таяздайды.','Құстардың қорек табуы қиындауы мүмкін.','Табиғи тепе-теңдікті сақтау болашаққа әсер етеді.','Балықтар азайса, көлдің қоректік байланыстары қалай өзгереді?'],
+ ['Көлдің басым бөлігі құрғады','Қураған жағалау мен құрғақ топырақ','Көл экожүйесі қатты бұзылды','Ылғалды орта жойылып, балықтар мен басқа тіршілік иелеріне қауіп төнеді.','Құрғаған аумақ кеңейеді.','Су жануарларының мекені жойылады.','Табиғатқа келген зиянды қалпына келтіру қиын әрі ұзақ болуы мүмкін.','Судың тартылуы өсімдіктер мен жергілікті халыққа қалай әсер етеді?'],
+ ['Құрғаған көл табаны','Тіршілік ортасының жоғалуы','Көлдің табиғи ортасы қатты тозды','Көл суы жойылғанда оған тәуелді тіршілік жүйесі бұзылады.','Көл табаны құрғайды.','Балықтар мен су құстарының мекені қалмайды.','Болашақ ұрпаққа табиғи мұра қалдыру міндеті өткірленеді.','Осындай жағдайды болдырмау үшін қандай нақты қадамдар қажет?'] ], action:'Су қорын үнемдеу, су көздерін ластамау және экологиялық бақылауды күшейту келесі ұрпаққа қолайлы орта қалдыруға ықпал етеді.'},
+ pollution:{label:'ЛАСТАНУ ҚАУПІ',icon:'🏭',control:'ҚОРШАҒАН ОРТАНЫҢ ЖАҒДАЙЫ',hint:'«Нашарлату» — қоқыс пен түтін көбейеді. «Кері қайтару» — бейне таза ортаға оралады.',facts:['🌊 Су және топырақ','🦆 Тіршілік иелері','⚖️ Болашаққа ықпалы'],weights:[[0,100],[2.5,98],[3.5,81],[4.7,55],[6.7,17],[9.96,0]], stages:[
+ ['Таза елді мекен','Су, жасыл желек және құстар','Қолайлы табиғи орта','Су мен жердің ластануы аз, тұрғындарға және жануарларға қолайлы жағдай бар.','Су мен жағалау таза көрінеді.','Құстар мен су жануарлары мекендейді.','Таза қоршаған орта келесі ұрпақ үшін де маңызды.','Таза ортаны сақтау үшін қандай ережелер қажет?'],
+ ['Ластану белгілері байқалды','Алғашқы қалдықтар пайда болды','Қоршаған ортаға қысым арта бастады','Қалдықтардың жиналуы мен түтіннің пайда болуы қоршаған ортаға қауіп төндіреді.','Жерде және суда қалдық пайда болады.','Жануарлар үшін қолайсыздықтар туындауы мүмкін.','Ластануды алдын ала тоқтату маңызды.','Қалдықты дұрыс басқарудың ең алғашқы қадамы қандай?'],
+ ['Қалдықтар көбейді','Ауа мен суға қауіп төнді','Ластану едәуір күшейді','Қалдықтар су мен топыраққа түсіп, өндірістік түтін ауа сапасына әсер етуі мүмкін.','Қоқыс су маңында шоғырланады.','Тіршілік ортасы нашарлайды.','Қоршаған ортаны қорғау шаралары күшейтілуі тиіс.','Ластанудың адам денсаулығына ықтимал салдары қандай?'],
+ ['Ауыр ластану','Түтін және қалдықтар қаптады','Табиғи орта қатты бүлінді','Жиналған қалдықтар мен түтін экожүйеге күрделі зиян келтіруі мүмкін.','Су мен топырақ қоқысқа толады.','Құстар мен балықтарға қауіп төнеді.','Зиянның алдын алу көбіне оны жоюдан тиімді.','Ластанудың жауапкершілігі кімдерге жүктелуі мүмкін?'],
+ ['Экологиялық дағдарыс','Өмір сүруге қолайсыз көрініс','Қоршаған орта қатты ластанды','Тұрақты ластану табиғи ортаны бұзып, болашақтағы өмір сапасына қауіп төндіруі мүмкін.','Су, топырақ және ауа ластанған.','Тіршілік иелерінің мекені бұзылған.','Бүгінгі ластану зардабы келесі ұрпаққа жалғасуы мүмкін.','Қалдықтарды азайту мен тазарту үшін қандай жоспар ұсынар едіңіз?'] ],action:'Қалдықтарды азайту, бөлек жинау, тазарту құрылыстарын пайдалану және шығарындыларды шектеу болашаққа келетін зиянның алдын алады.'},
+ forest:{label:'ОРМАННЫҢ ТАҒДЫРЫ',icon:'🌳',control:'ОРМАН ЭКОЖҮЙЕСІНІҢ ЖАҒДАЙЫ',hint:'«Нашарлату» — ағаштар жойылып, жануарлар азаяды. «Кері қайтару» — бейне жасыл орманға оралады.',facts:['🌳 Ағаштар мен топырақ','🦌 Жануарлар мекені','⚖️ Болашаққа ықпалы'],weights:[[0,100],[2.5,98],[3.4,81],[4.8,51],[6.6,17],[9.96,0]],stages:[
+ ['Жайқалған жасыл орман','Ағаштар мен жануарлар көп','Орман экожүйесі сақталған','Өсімдіктер мен жануарлар бір-бірімен байланысқан табиғи ортада өмір сүреді.','Ағаштар топырақты бекітіп, ылғалды сақтауға көмектеседі.','Құстар мен жабайы жануарлар мекендейді.','Орман — болашақ ұрпаққа қалатын табиғи байлық.','Орманның табиғат пен адамға қандай пайдасы бар?'],
+ ['Ағаш кесу басталды','Орманның бір бөлігі сиреді','Орманға қауіп төнді','Ағаш кесу тіршілік ортасын бөлшектеп, өсімдіктер мен жануарларға әсер етеді.','Ағаштардың бір бөлігі жойылады.','Жануарлардың мекені тарыла бастайды.','Орманды ұқыпты пайдалану қажет.','Орманды қалпына келтіру неліктен жылдар талап етеді?'],
+ ['Орман сиреді','Мекендердің бір бөлігі жоғалды','Орманның табиғи тепе-теңдігі бұзылды','Ағаштар азайғанда топырақтың кебуі мен жануарлардың орын ауыстыру қаупі артады.','Жер беті ашылып, топырақ қорғанысы азаяды.','Құстар мен жануарлардың тіршілік орны азаяды.','Орманды кесуге қатысты жауапты шешім қажет.','Ағаштардың азаюы жауын суы мен топыраққа қалай әсер етеді?'],
+ ['Орман алқабы қатты бүлінді','Қураған жер мен кесілген ағаштар','Орманның тіршілігіне ауыр соққы тиді','Көптеген ағаш жойылып, табиғи мекендер бүлінеді.','Топырақ эрозиясының қаупі күшеюі мүмкін.','Жануарлар басқа аумаққа көшеді немесе жойылу қаупіне ұшырайды.','Орманды қорғау — ұзақ мерзімді міндет.','Кесілген орманның орнына көшет отырғызу ғана жеткілікті ме?'],
+ ['Ормансыз қалған жер','Жойылған табиғи мекен','Орман экожүйесі қатты тозды','Орманның жойылуы биоалуантүрлілікке, топыраққа және жергілікті табиғи жағдайға әсер етуі мүмкін.','Жер жалаңаштанып, ағаштар жоғалған.','Көптеген түрлердің мекені қалмайды.','Келесі ұрпаққа орман мұрасын сақтау жауапкершілігі айқын көрінеді.','Орманды қалпына келтіру үшін қандай ұзақ мерзімді шаралар қажет?'] ],action:'Заңсыз ағаш кесудің алдын алу, орманды қалпына келтіру, өрт қауіпсіздігін сақтау және табиғи мекендерді қорғау қажет.'}
+};
+
+const CONDS=[
+ {id:'mon',label:'Тәуелсіз экологиялық мониторинг',basis:'Экология кодексі, 5-бап: болғызбау қағидаты',env:[0,3,4,5],mon:45,legal:0,irrev:0,part:0},
+ {id:'open',label:'Деректерді жыл сайын ашық жариялау',basis:'Орхус конвенциясы; Конституция, 37-бап',env:[0,1,2,2],mon:10,legal:5,irrev:0,part:20},
+ {id:'hear',label:'Тұрғындар мен жастарды қоғамдық тыңдауға қатыстыру',basis:'Орхус конвенциясы: шешімге қатысу',env:[0,1,2,2],mon:0,legal:5,irrev:0,part:45},
+ {id:'tech',label:'Зиянды азайтатын технология немесе балама',basis:'Экология кодексі, 5-бап: сақтық қағидаты',env:[0,4,5,6],mon:0,legal:0,irrev:20,part:0},
+ {id:'fund',label:'Қалпына келтіру қоры — жоба басталмай тұрып',basis:'Экология кодексі, 5-бап: «ластаушы төлейді»',env:[0,2,4,6],mon:0,legal:10,irrev:20,part:0},
+ {id:'long',label:'25 – 50 – 100 жылдық сценарийлік бағалау',basis:'Жоба ұсынысы: Кодекстің 56-бабына өзгеріс',env:[0,3,5,7],mon:5,legal:10,irrev:10,part:0}
+];
+const ALL=CONDS.map(c=>c.id),SOFT=['mon','open','hear','long'];
+const CASES={
+lake:{icon:'💧',name:'Су және зауыт',sub:'Ауызсу көзі мен аккумулятор зауыты',label:'ЖЕРАСТЫ СУЫ ЖӘНЕ КӨЛ',
+ title:'Ауызсу көзі ме, әлде жаңа зауыт па?',
+ desc:'Компания өңірде аккумулятор зауытын ашуды ұсынады. Жоба жұмыс орындарын береді, бірақ өндіріс жерасты суын көп пайдаланады және ауызсу көзіне ұзақмерзімді қауіп төндіреді. Көл мен жерасты суы бір жүйе.',
+ stats:[['600','жаңа жұмыс орны'],['18 млрд ₸','жылдық инвестиция'],['35 жыл','ықтимал әсер мерзімі']],
+ norms:[['ҚР Конституциясы (2026), 37-бап','Азаматтар табиғатты сақтауға және табиғи байлыққа ұқыпты қарауға міндетті.'],['ҚР Конституциясы (2026), 8-бап','Жер және оның қойнауы, су көздері, өсімдіктер мен жануарлар дүниесі халыққа тиесілі.'],['Экология кодексі, 5-бап','Болғызбау және сақтық қағидаттары: қайтымсыз зиян қаупі болса, дерек толық болмаса да алдын алу шаралары қарастырылады.']],
+ prop:['Жоба ұсынысы: Экология кодексінің 5-бабына','«Ұрпақаралық әділеттілік қағидаты: мемлекет пен кәсіпорындар бүгінгі қажеттіліктерін өтеген кезде болашақ ұрпақтың таза ортада өмір сүруіне және табиғи байлықтарды пайдалануына елеулі нұқсан келтірмеуге міндетті».'],
+ normQ:{q:'Ғылыми дерек толық емес, бірақ ауызсу көзінің қайтымсыз ластану қаупі жоғары. Қай қағидат басым?',o:['Сақтық қағидаты','Экономикалық тиімділік','Коммерциялық құпия'],ok:0,fb:'Дұрыс жауап — сақтық қағидаты (Кодекс, 5-бап). Қайтымсыз зиян қаупі болса, ғылыми белгісіздік әрекетсіздікке себеп бола алмайды.'},
+ ev:[['benefit','Дерек','Жоба 600 жаңа жұмыс орнын ұсынады.'],['risk','Дерек','Ықтимал әсер мерзімі — 35 жыл.'],['risk','Тарап пікірі','Тұрғындар ауызсу сапасына алаңдайды.'],['risk','Шартты болжам','Бақылаусыз су пайдалану келешекте су тапшылығын күшейтуі мүмкін.'],['alt','Балама','Жабық су айналымын және тәуелсіз мониторингті қарастыруға болады.']],
+ steps:[
+  ['Қамту шегі','Зауыттың әсері қай аумаққа және қанша уақытқа таралуы мүмкін?',['Тек зауыт аумағына, құрылыс кезінде ғана','Жерасты суы арқылы бүкіл өңірге, 35 жыл және одан да ұзақ','Нормативтер сақталса, ешқайда таралмайды'],1,'Жерасты суы ағып, ластану жинақталады. Кодекстің 4-бабы зауыттың тек бүгінгі нормативке сай болуын тексереді, ал 25–50 жылдық жиынтық әсерді бағаламайды. Бұл — жұмыста анықталған олқылық.'],
+  ['Ресурс','Қай ресурс басты қауіпте?',['Ауызсу көзі — жерасты суы мен көл','Жер учаскесінің бағасы','Жол инфрақұрылымы'],0,'Конституцияның 8-бабы бойынша су көздері халыққа, яғни бүгінгі және келешек ұрпаққа тиесілі.'],
+  ['Сценарий','Бақылау болмаса, 25–50 жылда не болуы мүмкін?',['Ештеңе өзгермейді','Ластану жинақталып, су тапшылығы күшеюі мүмкін','Су өздігінен тазарады'],1,'Арал теңізінің сабағы: су пайдаланудың жинақталған әсерін елемеу кейінгі ұрпаққа зардап әкелді.'],
+  ['Әділеттілік','Пайда мен шығын кімге тиеді?',['Пайда бүгін компания мен жұмысшыларға тиеді, ал су шығыны келешек тұрғындарға қалады','Пайда да, шығын да тек компанияға тиеді','Ешкімге шығын жоқ'],0,'Ұрпақаралық әділеттілік: пайда мен шығын уақыт бойынша әділ бөлінуі керек (Э. Браун Вайс, Дж. Роулз).'],
+  ['Балама','Зияны аз балама бар ма?',['Жоқ, тек жобадан бас тарту керек','Иә: жабық су айналымы және суды қайта пайдалану технологиясы','Зауытты өзен жағасына көшіру'],1,'Балама ізделсе, даму тоқтамайды. Ұрпақаралық әділеттілік — абсолютті тыйым емес, таразылау.'],
+  ['Кепілдік','Су ластанса, қалпына келтіруді кім төлейді?',['Жергілікті бюджет','Компания: ол алдын ала кепілдік қорын құрады («ластаушы төлейді»)','Келешек ұрпақ'],1,'Кодекстің 5-бабында «ластаушы төлейді» қағидаты бар. Бірақ 35 жылдан кейін компания жабылып қалса ше? Сондықтан қорды алдын ала құру керек.'],
+  ['Ашықтық','Тұрғындар шешімге қалай қатысуы керек?',['Шешім қабылданған соң хабарлау жеткілікті','Сараптама деректері ашық жарияланып, тыңдауға жастар да қатысады','Ақпарат коммерциялық құпия болып саналады'],1,'Орхус конвенциясы ақпаратқа қол жеткізуге және шешімге қатысуға құқық береді. Конституцияның 37-бабы бойынша экологиялық қауіпті жасырған лауазымды тұлғалар жауапқа тартылады.']],
+ dec:[
+  {k:'A',t:'Рұқсат беру: зауыт жылдық нормативтерге сай болса, бұл жеткілікті',b:'қолданыстағы тәжірибе, Экология кодексі, 4-бап (ағымдағы нормативтер)',env:[100,58,32,12],econ:95,legal:40,irrev:15,mon:20,part:20,c:[],v:'Шешім бүгінгі заңға формалды сай, бірақ 35 жылдық жинақталған әсер бағаланбады. Конституция преамбуласындағы келешек ұрпақ алдындағы жауапкершілік ескерілмеді.'},
+  {k:'B',t:'Шартты рұқсат: жабық су айналымы, кепілдік қоры және тәуелсіз мониторинг',b:'Экология кодексі, 5-бап (болғызбау, «ластаушы төлейді»); жоба ұсынысы (25/50 жылдық бағалау)',env:[100,78,64,52],econ:78,legal:70,irrev:45,mon:35,part:30,c:ALL,v:'Даму мен болашақ мүддесі таразыланды. Шарттар неғұрлым толық болса, таразы соғұрлым тепе-тең болады.'},
+  {k:'C',t:'Тоқтата тұру: тәуелсіз гидрогеологиялық сараптама аяқталғанша (сақтық қағидаты)',b:'Экология кодексі, 5-бап (сақтық қағидаты)',env:[100,94,91,89],econ:50,legal:82,irrev:85,mon:40,part:35,c:SOFT,v:'Дерек толық болмағанда сақтық заңды әрі әділ қадам. Бірақ сараптамадан кейін шешім қайта қаралуы керек: тоқтату мәңгілік болмауы тиіс.'},
+  {k:'D',t:'Рұқсат бермеу',b:'Конституция, 8 және 37-баптар',env:[100,97,96,95],econ:20,legal:65,irrev:95,mon:30,part:25,c:[],v:'Табиғат толық сақталады, бірақ 600 жұмыс орны жоғалады. Жұмыстың қорытындысы бойынша болашақ мүддесі абсолютті тыйымды емес, таразылауды талап етеді.'}],
+ best:'B (дерек толық болмаса — C)',
+ law:['Экология кодексінің 5-бабына «ұрпақаралық әділеттілік» қағидатын жеке қағидат ретінде енгізу.','Ауызсу көздеріне әсер ететін жобаларға стратегиялық экологиялық бағалауда (56-бап) кемінде 25 жылдық, қауіпті жағдайда 50 жылдық сценарий талап ету.','Кепілдік қорын жоба басталмай тұрып құруды міндеттеу.']},
+pollution:{icon:'🏭',name:'Кен және қалдық',sub:'Экспорт пен 100 жылдық тәуекел',label:'КЕН ҚАЛДЫҒЫ ЖӘНЕ ЛАСТАНУ',
+ title:'Кен өндіру және 100 жылдық қалдық қаупі',
+ desc:'Кен орны экспортты арттырады. Бірақ қалдық қоймасының әсері кәсіпорын жабылғаннан кейін де бірнеше ұрпаққа созылуы мүмкін: шаң, топырақ пен жерасты суының ластануы.',
+ stats:[['1 200','жұмыс орны'],['45 жыл','өндіру мерзімі'],['100+ жыл','қалдық тәуекелі']],
+ norms:[['Экология кодексі, 5-бап, 5) тармақша','«Ластаушы төлейді»: қызметтің жағымсыз экологиялық салдарын болғызбау, бақылау және залалды жою шығындарын тиісті тұлға көтереді.'],['ҚР Конституциясы (2026), 37-бап','Азаматтар табиғатты сақтауға міндетті; экологиялық қауіпті жасырған лауазымды тұлғалар жауапқа тартылады.'],['Орхус конвенциясы (1998)','Экологиялық ақпаратқа қол жеткізу, шешім қабылдауға қатысу және сотқа жүгіну құқығы; қазіргі және болашақ ұрпақтың мүддесі.']],
+ prop:['Жоба ұсынысы: Экология кодексінің 56-бабына','Қауіпті жобалардың (қалдық көму, кен өндіру) зардабы стратегиялық экологиялық бағалауда міндетті түрде 50 және 100 жылдық сценарийлермен тексерілуі тиіс.'],
+ normQ:{q:'Кәсіпорын 45 жылдан соң жабылады, ал қалдық 100 жылдан астам қауіпті. Қалпына келтіру шығынын кім көтеруге тиіс?',o:['Келешек ұрпақ','Қызметті жүзеге асырған тұлға — «ластаушы төлейді»','Жергілікті тұрғындар'],ok:1,fb:'Дұрыс жауап — «ластаушы төлейді» (Кодекс, 5-бап). Бірақ жұмыста бір мәселе көрсетілген: 50 жылдан кейін кәсіпорын жабылып қалса, кім төлейді? Оның жауабы — алдын ала құрылған кепілдік қоры.'},
+ ev:[['benefit','Дерек','1 200 жұмыс орны ашылып, экспорт артады.'],['risk','Дерек','Өндіру мерзімі 45 жыл, ал қалдық тәуекелі 100 жылдан асады.'],['risk','Тарихи сабақ','Семей полигонының зардабы бірнеше ұрпаққа созылды.'],['risk','Шартты болжам','Қорғаныш қабаты бұзылса, ластану ондаған жылдан кейін байқалуы мүмкін.'],['alt','Балама','Қалпына келтіру қоры құрылып, рекультивация кезең-кезеңімен жүргізіледі.']],
+ steps:[
+  ['Қамту шегі','Қалдық қоймасының әсері қанша уақытқа созылады?',['Тек өндіру кезінде — 45 жыл','Кәсіпорын жабылғаннан кейін де 100 жылдан астам','5–10 жыл'],1,'Зиян келтіруші мен зардап шегуші әр түрлі уақытта өмір сүреді. Экологиялық жауапкершіліктің уақыттық ерекшелігі осы (жұмыстың 1.3 бөлімі).'],
+  ['Ресурс','Қандай ресурстар қауіпте?',['Топырақ, жерасты суы және ауа (шаң)','Тек кен қоры','Тек экспорт көлемі'],0,'Конституцияның 8-бабы бойынша жер қойнауы мен су халыққа тиесілі, оның ішінде келешек ұрпаққа да.'],
+  ['Сценарий','Бақылау болса және болмаса не өзгереді?',['Қойма бекітіліп, бақыланса, тәуекел азаяды; бақыланбаса, қорғаныш қабаты бұзылып, ластану кейін білінеді','Қойма мәңгі қауіпсіз','Қауіп тек жаңбырлы жылдары болады'],0,'Қазіргі бағалау жүйесі жақын жылдармен шектеледі (56-бап). 100 жылдық сценарий міндетті емес — жоба осыны түзетуді ұсынады.'],
+  ['Әділеттілік','Пайда мен шығын кімге тиеді?',['Экспорт пайдасы бүгінге тиеді, ал қалдық тәуекелі 4–5 ұрпаққа қалады','Барлық ұрпақ тең пайда көреді','Тәуекелді тек кәсіпорын көтереді'],0,'Бүгінгі табыс ертеңгі адамдардың несібесі есебінен келсе, оны «адал табыс» деуге болмайды.'],
+  ['Балама','Зиянды азайтудың жолы бар ма?',['Иә: қалдықты қайта өңдеу және қойманы кезең-кезеңімен рекультивациялау','Қалдықты өзенге ағызу','Баламасы жоқ'],0,'Сақтық пен болғызбау қағидаттары зиянды мүмкіндігінше көзінде азайтуды талап етеді.'],
+  ['Кепілдік','Кәсіпорын жабылғаннан кейін қалпына келтіруді кім қаржыландырады?',['Мемлекет бюджеті','Өндіріс басталмай тұрып құрылған арнайы қалпына келтіру қоры','Кепілдік қажет емес'],1,'Кодекстің 5-бабындағы «ластаушы төлейді» қағидаты бүгінгі айыппұлмен шектеледі. Ұзақ мерзімге алдын ала қаржылық кепілдік керек.'],
+  ['Ашықтық','Тұрғындар ақпаратты қалай алады?',['Мониторинг деректері жыл сайын ашық жарияланады, ал ұлттық баяндамада «Болашақ ұрпаққа әсер» бөлімі болады','Деректер тек министрлікке беріледі','Тұрғындарға ақпарат қажет емес'],0,'Орхус конвенциясы ақпараттың ашықтығын талап етеді. Жоба Ұлттық баяндамаға жаңа бөлім қосуды ұсынады.']],
+ dec:[
+  {k:'A',t:'Рұқсат беру: қаржылық кепілдіксіз, бұзушылық болса айыппұл салынады',b:'Экология кодексі, 5-бап: «ластаушы төлейді» тек айыппұл түрінде',env:[100,62,35,10],econ:95,legal:35,irrev:10,mon:20,part:20,c:[],v:'Кәсіпорын жабылғаннан кейінгі 55 жылдан астам уақыттың тәуекелі ешкімге жүктелмеді. Шығын келешек ұрпаққа қалды.'},
+  {k:'B',t:'Рұқсат беру: арнайы қалпына келтіру қоры, тәуелсіз бақылау, ашық дерек және 100 жылдық жоспар',b:'Экология кодексі, 5-бап («ластаушы төлейді»); Орхус конвенциясы; жоба ұсынысы (56-бап, 100 жылдық сценарий)',env:[100,76,60,48],econ:80,legal:70,irrev:45,mon:35,part:30,c:ALL,v:'Экспорт пайдасы сақталды, ал ұзақ тәуекелдің ақысын бүгінгі пайда алушы төлейді. Шарттар толық болса, бұл — ең әділ жол.'},
+  {k:'C',t:'Шешімді тәуелсіз сараптамалық кеңестің қорытындысына дейін кейінге қалдыру',b:'Сақтық қағидаты; жоба ұсынысы (Адам құқықтары жөніндегі уәкіл жанындағы сараптамалық кеңес)',env:[100,93,90,88],econ:45,legal:80,irrev:80,mon:40,part:40,c:SOFT,v:'Тәуекел толық бағаланбай тұрып асығыс шешім қабылданбады. Кеңестің қорытындысы жария болып, мемлекеттік орган оған дәлелді жауап беруге тиіс.'},
+  {k:'D',t:'Кен өндіруге толық тыйым салу',b:'Конституция, 8-бап (жер қойнауы халыққа тиесілі)',env:[100,97,96,95],econ:15,legal:62,irrev:95,mon:25,part:25,c:[],v:'Тәуекел нөлге жақындады, бірақ 1 200 жұмыс орны мен экспорт табысы жоғалды. Пайда мен шығын теңестірілмеді.'}],
+ best:'B',
+ law:['56-бапқа: қауіпті жобаларға 50 және 100 жылдық сценарийлік бағалауды міндеттеу.','Қалпына келтіру қорын өндіріс басталмай тұрып құруды заңмен бекіту.','Ұлттық экологиялық баяндамаға 5 көрсеткіштен тұратын «Болашақ ұрпаққа әсер» бөлімін қосу.','Адам құқықтары жөніндегі уәкіл жанынан Сараптамалық кеңес құру: оның қорытындысы жария, ал мемлекеттік орган оған дәлелді жауап береді.']},
+forest:{icon:'🌳',name:'Орман және қала',sub:'Жасыл белдеу мен жаңа тұрғын аудан',label:'ЖАСЫЛ БЕЛДЕУ',
+ title:'Орманды сақтаймыз ба, әлде жаңа аудан саламыз ба?',
+ desc:'Қалаға 4 000 пәтер қажет. Ұсынылған аумақтың 38%-ы жасыл белдеуге кіреді. Бұл орман жазғы температураны төмендетіп, топырақты бекітеді. Құрылыс компаниясы кесілген ағаштардың орнына басқа облыста көшет отырғызуды ұсынады.',
+ stats:[['4 000','жаңа пәтер'],['320 га','жасыл белдеу'],['2,1 °C','салқындату әсері']],
+ norms:[['Экология кодексі, 241-бап','Биоәртүрлілік шығынының орны толтырылуға тиіс. 2-тармақ бойынша орнын толтыру «сол аумақта және (немесе) … басқа аумақта» жүргізілуі мүмкін.'],['ҚР Конституциясы (2026), 8-бап','Өсімдіктер мен жануарлар дүниесі, басқа да табиғи ресурстар халыққа тиесілі.'],['Орхус конвенциясы (1998)','Жоспар мен бағдарлама талқыланғанда қоғамның шешімге қатысуы қамтамасыз етіледі.']],
+ prop:['Жоба ұсынысы: 241-бапты нақтылау','Биоәртүрлілік шығынының орны бірінші кезекте зиян келген аумақта толтырылуы тиіс. Сол жерде өмір сүретін келешек ұрпақтың құқығы басқа өңірде отырғызылған ағашпен өтелмейді.'],
+ normQ:{q:'Компания 320 га орманның орнына 500 км қашықтағы облыста ағаш егуді ұсынады. Бұл қаланың келешек тұрғындарының мүддесін қорғай ма?',o:['Иә, 241-бап рұқсат береді, демек бұл әділ','Заң оған формалды түрде рұқсат береді, бірақ зиян келген аумақтың келешек тұрғындарының мүддесі қорғалмайды','Орман маңызды емес'],ok:1,fb:'Дұрыс. Жұмыста дәл осы олқылық көрсетілген: зауыт немесе құрылыс бір жердің табиғатын бүлдіріп, орнын басқа жерде толтыра алады.'},
+ ev:[['benefit','Дерек','Қалаға 4 000 пәтер қажет.'],['benefit','Тарап пікірі','Жас отбасылар баспана күтіп жүр.'],['risk','Дерек','Аумақтың 38%-ы, яғни 320 га, жасыл белдеуге кіреді.'],['risk','Дерек','Орман жазғы температураны 2,1 °C төмендетеді.'],['alt','Балама','Тығыз құрылыс салып, орманның 80%-ын және жасыл дәлізді сақтауға болады.']],
+ steps:[
+  ['Қамту шегі','Орман кесілсе, оның әсері қай аумаққа тиеді?',['Тек құрылыс алаңына','Бүкіл қалаға: жасыл белдеу жазғы температураны 2,1 °C төмендетеді','Тек көрші ауданға'],1,'Жасыл белдеу — бүкіл қаланың ортақ ресурсы. Оның әсері құрылыс алаңынан әлдеқайда кең.'],
+  ['Ресурс','Қай ресурс жоғалады?',['Орман, топырақ, ауа сапасы және салқындату әсері','Тек ағаш сүрегі','Жердің бағасы'],0,'Тың игерудің сабағы: табиғи ресурс тек бүгінгі өнім көлемімен өлшенбейді.'],
+  ['Сценарий','Ағаштың орнына көшет отырғызылса не болады?',['Бір жылда бәрі қалпына келеді','Орман ондаған жылда ғана қалпына келеді; оған дейін қала ысиды, топырақ эрозиясы артады','Ешқандай әсер болмайды'],1,'Қайтымдылық маңызды: орманның қалпына келуіне 25–50 жыл кетеді. Бұл бір ұрпақтың өмірі.'],
+  ['Әділеттілік','Пайда мен шығын кімге тиеді?',['Пәтерді бүгінгі тұрғындар алады, ал ыстық пен жасыл аймақтың тапшылығы келешек тұрғындарға қалады','Барлығы бірдей ұтады','Тек құрылысшылар ұтылады'],0,'Баспана да маңызды, оны елемеуге болмайды. Мәселе «экономика немесе экология» таңдауында емес, пайда мен шығынды әділ бөлуде.'],
+  ['Балама','Зияны аз балама бар ма?',['Иә: қабаттылықты арттырып, тығыз салуға, жасыл дәліз қалдыруға немесе басқа учаске таңдауға болады','Орманды толық кесу керек','Пәтер салудан бас тарту керек'],0,'Халық даналығы: «Бір тал кессең, он тал ек». Бірақ ең алдымен тал кеспеудің жолын іздеу керек.'],
+  ['Кепілдік','Шығынның орны қай жерде толтырылуы керек?',['Басқа облыста ағаш егу жеткілікті','Шығынның орны дәл осы аумақта толтырылуы керек','Өтемақы қажет емес'],1,'241-баптың 2-тармағы орнын «басқа аумақта» толтыруға мүмкіндік береді. Жоба оны нақтылауды ұсынады.'],
+  ['Ашықтық','Шешімге кім қатысуы керек?',['Қала тұрғындары мен жастар қоғамдық тыңдауда жоспарды талқылауы керек','Әкімдік өзі шешеді','Тек құрылыс компаниясы шешеді'],0,'Сауалнамаға қатысқандардың 87,9%-ы жастардың экологиялық шешімдерді тұрақты талқылауына қатысуын қолдады.']],
+ dec:[
+  {k:'A',t:'Бүкіл аумақта құрылыс салу, ал орманның орнын басқа облыста толтыру',b:'Экология кодексі, 241-бап, 2-тармақ («басқа аумақта» толтыру)',env:[100,55,40,30],econ:95,legal:45,irrev:15,mon:20,part:20,c:[],v:'Заң формалды түрде сақталды, бірақ қаланың келешек тұрғындары жасыл белдеуден және 2,1 °C салқындату әсерінен айырылды. Бұл — жұмыста көрсетілген 241-бап олқылығы.'},
+  {k:'B',t:'Тығыз құрылыс: орманның 80%-ы мен жасыл дәлізді сақтау, шығынның орнын сол аумақта толтыру',b:'Экология кодексі, 241-бап (шығынның орнын толтыру); жоба ұсынысы (зиян келген аумақта толтыру)',env:[100,80,70,62],econ:80,legal:72,irrev:55,mon:35,part:30,c:ALL,v:'Баспана салынады, ал жасыл белдеудің негізі сақталады. Пайда мен шығын уақыт бойынша әділ бөлінді.'},
+  {k:'C',t:'Жобаны жасыл белдеуге кірмейтін басқа учаскеге көшіру',b:'Экология кодексі, 5-бап (болғызбау қағидаты)',env:[100,95,93,92],econ:62,legal:84,irrev:90,mon:35,part:40,c:SOFT,alt:1,v:'Зиянның алдын алу оны кейін жоюдан тиімді. Бірақ құрылыс кешігеді, ал жас отбасылар баспананы ұзағырақ күтеді.'},
+  {k:'D',t:'Құрылысқа толық тыйым салу',b:'Конституция, 8-бап',env:[100,98,97,96],econ:10,legal:60,irrev:95,mon:25,part:25,c:[],v:'Орман сақталды, бірақ 4 000 отбасының баспана мәселесі шешілмеді. Таразы теңдігі бұзылды.'}],
+ best:'B (немесе C)',
+ law:['241-баптың 2-тармағын нақтылау: биоәртүрлілік шығынының орны бірінші кезекте зиян келген аумақта толтырылады.','Жасыл белдеуге әсер ететін жобаларда жастарды қоғамдық тыңдауға міндетті түрде қатыстыру.','Ірі қала құрылысы жобаларына 25 жылдық әсерді бағалауды талап ету (56-бап).']}
+};
+const ORDER=['lake','pollution','forest'];
+const STEPS=[['Іс','Іс материалы'],['Норма','Құқықтық негіз'],['Дәлел','Дәлелдер қоржыны'],['7 қадам','Құқықтық талдау'],['Шешім','Құқықтық шешім'],['Үкім','Болашақ соты'],['Парақ','Шешім парағы']];
+const fresh=()=>({step:0,normA:null,ev:[],ans:Array(7).fill(null),dec:null,conds:[],just:'',year:0,compare:false,visited:[true,false,false,false,false,false,false]});
+const S={lake:fresh(),pollution:fresh(),forest:fresh()};
+let topic='lake';
+const C=()=>CASES[topic],st=()=>S[topic];
+
+/* ---------- model ---------- */
+function decObj(){const s=st();return s.dec==null?null:C().dec[s.dec]}
+function activeConds(){const d=decObj();if(!d)return[];return st().conds.filter(id=>d.c.includes(id)).map(id=>CONDS.find(c=>c.id===id))}
+function envTraj(useWorst){const d=useWorst?C().dec[0]:decObj();if(!d)return[100,100,100,100];const cs=useWorst?[]:activeConds();const permit=d.c===ALL;return d.env.map((v,i)=>clamp(v+cs.reduce((a,c)=>a+(permit?c.env[i]:0),0)*(permit?1:0),0,100))}
+function metrics(){const d=decObj();if(!d)return null;const cs=activeConds();const sum=k=>cs.reduce((a,c)=>a+c[k],0);const env=envTraj()[3];
+ const m={env,econ:d.econ,legal:clamp(d.legal+sum('legal'),0,100),irrev:clamp(d.irrev+sum('irrev'),0,100),mon:clamp(d.mon+sum('mon'),0,100),part:clamp(d.part+sum('part'),0,100)};
+ m.index=Math.round(m.env*.3+m.econ*.15+m.legal*.2+m.irrev*.15+m.mon*.1+m.part*.1);return m}
+function stepScore(){const s=st();return s.ans.reduce((a,x,i)=>a+(x===C().steps[i][3]?1:0),0)}
+function badges(){const s=st(),c=C(),m=metrics(),ok=i=>s.ans[i]===c.steps[i][3],sc=stepScore(),done=s.ans.every(x=>x!=null);
+ return{law:s.normA===c.normQ.ok&&(!m||m.legal>=70),
+  work:done&&sc>=5,
+  just:ok(3)&&(!m||m.env>=45),
+  patr:ok(1)&&(!m||m.env>=60),
+  unity:ok(6)||s.conds.includes('hear'),
+  crea:ok(4)||(!!m&&(s.conds.includes('tech')&&decObj().c===ALL||!!decObj().alt))}}
+const HOW={law:'2-қадам: нормаға сұраққа дұрыс жауап беріңіз',work:'4-қадам: 7 қадамның кемінде 5-іне дұрыс жауап беріңіз',just:'«Әділеттілік» қадамы + болашақты ескеретін шешім',patr:'«Ресурс» қадамы + табиғатты сақтайтын шешім',unity:'«Ашықтық» қадамы немесе қоғамдық тыңдау шарты',crea:'«Балама» қадамы немесе зиянды азайтатын технология'};
+const BADGE_TXT={just:['Әділдік және жауапкершілік','Пайда мен шығынды уақыт бойынша әділ бөлдіңіз'],law:['Заң және тәртіп','Нормаға сүйеніп шешім шығардыңыз'],patr:['Тәуелсіздік және отаншылдық','Туған жердің табиғатын 100 жылға сақтадыңыз'],unity:['Бірлік және ынтымақ','Тұрғындар мен жастарды шешімге қатыстырдыңыз'],work:['Еңбекқорлық және кәсіби біліктілік','Талдауды мұқият жүргізіп, шешіміңізді дәлелдедіңіз'],crea:['Жасампаздық және жаңашылдық','Зияны аз балама таптыңыз']};
+
+/* ---------- video ---------- */
+const V={f:$('vF'),r:$('vR')};let cur=V.f,ready=false,raf=0,token=0,curPct=100;const src={};
+function interp(p){const pts=WEIGHTS[topic];for(let i=1;i<pts.length;i++){const[t1,v1]=pts[i-1],[t2,v2]=pts[i];if(p>=v2)return clamp(t1+(t2-t1)*(v1-p)/(v1-v2),0,D)}return D}
+function t2p(t){const pts=WEIGHTS[topic];t=clamp(t,0,D);for(let i=1;i<pts.length;i++){const[t1,v1]=pts[i-1],[t2,v2]=pts[i];if(t<=t2)return clamp(v1+(v2-v1)*(t-t1)/(t2-t1),0,100)}return 0}
+function vis(v){V.f.classList.toggle('hidden',v!==V.f);V.r.classList.toggle('hidden',v!==V.r);cur=v}
+function decode(id){return 'assets/'+id.replace(/^media_/, '')+'.mp4'}
+function getSrc(k,d){const key=k+'_'+d;if(!src[key])src[key]=decode('media_'+key);return src[key]}
+function meta(v){return new Promise((res,rej)=>{if(v.readyState>=1){res();return}v.addEventListener('loadedmetadata',res,{once:true});v.addEventListener('error',rej,{once:true})})}
+function halt(){if(raf)cancelAnimationFrame(raf);raf=0;V.f.pause();V.r.pause();playing=0;if($('declineBtn'))marks()}
+let lastStage=-1;
+function showPct(p){curPct=clamp(Math.round(p),0,100);$('envTag').textContent=curPct+'%';const r=$('lvl');if(r){r.value=curPct;r.style.setProperty('--p',curPct+'%')}
+ const idx=curPct>=89?0:curPct>=68?1:curPct>=43?2:curPct>=18?3:4;if(idx!==lastStage){lastStage=idx;const x=VIEWS[topic].stages[idx];$('stH').textContent=x[2];$('stD').textContent=x[3];$('f1').textContent=x[4];$('f2').textContent=x[5];$('f3').textContent=x[6];$('stQ').textContent=x[7];$('stP').textContent=(idx+1)+' / 5 кезең';$('capTitle').textContent=x[0]}}
+function setTopicLabels(){const v=VIEWS[topic];v.facts.forEach((n,i)=>$('f'+(i+1)+'t').textContent=n);const bl={lake:['↘ Суды азайту','↗ Суды көбейту'],pollution:['↗ Ластануды арттыру','↘ Ластануды азайту'],forest:['↘ Ағашты азайту','↗ Орманды қалпына келтіру']}[topic];$('declineBtn').textContent=bl[0];$('recoverBtn').textContent=bl[1];lastStage=-1}
+function seekPct(p){halt();showPct(p);if(!ready)return;const t=interp(p);if(cur===V.r)V.r.currentTime=clamp(D-t,0,D);else V.f.currentTime=t}
+let playing=0;
+function marks(){$('declineBtn').classList.toggle('playing',playing===1);$('recoverBtn').classList.toggle('playing',playing===-1)}
+function rate(){return +($('speed')?.value||1)}
+function playTo(p,done,mult){halt();playing=0;marks();if(!ready){showPct(p);done&&done();return}const tgt=interp(p);const now=cur===V.f?V.f.currentTime:D-V.r.currentTime;if(Math.abs(tgt-now)<.06){seekPct(p);done&&done();return}
+ const dir=tgt>now?1:-1,v=dir===1?V.f:V.r,spd=rate()*(mult||1);v.muted=true;v.defaultMuted=true;v.currentTime=clamp(dir===1?now:D-now,0,D);v.playbackRate=spd;vis(v);playing=dir;marks();
+ const finish=()=>{halt();playing=0;marks();seekPct(p);done&&done()};
+ const loop=()=>{const t=dir===1?v.currentTime:D-v.currentTime;showPct(t2p(t));if((dir===1&&t>=tgt-.02)||(dir===-1&&t<=tgt+.02)||v.ended){finish();return}raf=requestAnimationFrame(loop)};
+ /* fallback: if the browser refuses play(), step through frames by seeking */
+ let fbOn=false;const fallback=()=>{if(fbOn)return;fbOn=true;v.pause();vis(V.f);let t=now,last=performance.now();const step=tm=>{const dt=(tm-last)/1000;last=tm;t+=dir*dt*spd;if((dir===1&&t>=tgt)||(dir===-1&&t<=tgt)){finish();return}if(!V.f.seeking)V.f.currentTime=clamp(t,0,D);showPct(t2p(t));raf=requestAnimationFrame(step)};raf=requestAnimationFrame(step)};
+ let started=false;const pr=v.play();if(pr&&pr.then){pr.then(()=>{started=true;if(fbOn){v.pause();return}raf=requestAnimationFrame(loop)}).catch(()=>{v.pause();fallback()})}else{raf=requestAnimationFrame(loop)}
+ setTimeout(()=>{if(!started&&playing===dir&&v.paused&&!raf){fallback()}},700)}
+async function loadVideo(){halt();const tk=++token;ready=false;$('poster').src=(window.POSTERS||{})[topic]||'';$('loading').classList.remove('hide');
+ try{V.f.src=getSrc(topic,'f');V.r.src=getSrc(topic,'r');V.f.load();V.r.load();await Promise.all([meta(V.f),meta(V.r)]);if(tk!==token)return;ready=true;vis(V.f);V.f.currentTime=interp(curPct);$('loading').classList.add('hide')}
+ catch(e){if(tk!==token)return;$('loading').innerHTML='<div>Бейне ашылмады</div><small>Файлды Chrome немесе Edge арқылы ашып көріңіз</small>';console.error(e)}}
+
+/* ---------- scene / scale ---------- */
+function stageText(p){const L={lake:['Тіршілікке толы көл','Көл суы азая бастады','Су айдыны едәуір тарылды','Көлдің басым бөлігі құрғады','Құрғаған көл табаны'],pollution:['Таза елді мекен','Ластану белгілері байқалды','Қалдықтар көбейді','Ауыр ластану','Экологиялық дағдарыс'],forest:['Жайқалған жасыл орман','Ағаш кесу басталды','Орман сиреді','Орман алқабы қатты бүлінді','Ормансыз қалған жер']}[topic];return L[p>=89?0:p>=68?1:p>=43?2:p>=18?3:4]}
+function drawScale(econ,env){const ang=econ==null?0:clamp(-(econ-env)*.28,-18,18),r=ang*Math.PI/180,cx=160,cy=39,h=118;
+ $('beam').setAttribute('transform',`rotate(${ang} ${cx} ${cy})`);
+ const L=[cx-h*Math.cos(r),cy-h*Math.sin(r)],R=[cx+h*Math.cos(r),cy+h*Math.sin(r)];
+ $('panL').setAttribute('transform',`translate(${L[0].toFixed(1)} ${L[1].toFixed(1)})`);$('panR').setAttribute('transform',`translate(${R[0].toFixed(1)} ${R[1].toFixed(1)})`);
+ $('lv').textContent=econ==null?'—':econ;$('rv').textContent=econ==null?'—':env}
+function refreshLeft(){const s=st(),m=metrics();$('yearTag').textContent=YEARS[s.year]+(s.year?' · '+YL[s.year]:'');
+ const traj=envTraj(s.compare),env=traj[s.year];
+ if(!m){$('idxNum').textContent='—';$('idxNote').textContent='Шешім қабылдағаннан кейін есептеледі';drawScale(null,0);$('capTitle').textContent='Бүгінгі жағдай · 2026';$('capSub').textContent='Шешім әлі қабылданған жоқ';return}
+ const a=C().dec[0];$('idxNum').textContent=s.compare?Math.round(a.env[3]*.3+a.econ*.15+a.legal*.2+a.irrev*.15+a.mon*.1+a.part*.1):m.index;
+ $('idxNote').textContent=s.compare?'«Шараларсыз» нұсқа (A) үшін':'Таразы теңдігі: 2126 жылғы орта '+m.env+'%, бүгінгі пайда '+m.econ+'%';
+ drawScale(s.compare?C().dec[0].econ:m.econ,env);$('capTitle').textContent=stageText(env);$('capSub').textContent=(s.compare?'Шараларсыз нұсқа · ':'Сіздің шешіміңіз · ')+YEARS[s.year]+' жыл'}
+function setYear(y,animate){const s=st();s.year=y;const p=envTraj(s.compare)[y];refreshLeft();renderYears();if(animate)playTo(p,null,1.5);else seekPct(p)}
+
+/* ---------- render ---------- */
+function renderCases(){$('cases').innerHTML=ORDER.map(k=>{const c=CASES[k];return`<button class="case" role="tab" type="button" data-k="${k}" aria-selected="${k===topic}"><span class="ic">${c.icon}</span><span><strong>${esc(c.name)}</strong><small>${esc(c.sub)}</small></span></button>`}).join('');
+ document.querySelectorAll('.case').forEach(b=>b.onclick=()=>{if(b.dataset.k!==topic)switchCase(b.dataset.k)})}
+function canGo(i){const s=st();if(i<=4)return true;return s.dec!=null}
+function renderStepper(){const s=st();$('stepper').innerHTML=STEPS.map((x,i)=>`<button type="button" class="st ${s.visited[i]&&i!==s.step?'done':''}" ${i===s.step?'aria-current="step"':''} ${canGo(i)?'':'disabled'} data-i="${i}"><span class="n">${i+1}</span><span class="tx">${x[0]}</span></button>`).join('');
+ document.querySelectorAll('.st').forEach(b=>b.onclick=()=>go(+b.dataset.i))}
+function nav(prev,next,nextLabel,nextDisabled){return`<div class="nav">${prev?`<button class="small-btn" type="button" data-go="${st().step-1}">← Артқа</button>`:'<span></span>'}${next?`<button class="primary" type="button" data-go="${st().step+1}" ${nextDisabled?'disabled':''}>${nextLabel||'Келесі →'}</button>`:''}</div>`}
+function qBlock(id,num,q,opts,chosen,ok,fb){return`<div class="q" data-q="${id}">${num?`<div class="qn">${esc(num)}</div>`:''}<p class="qt">${esc(q)}</p><div class="opts">${opts.map((o,i)=>{let cl='opt';if(chosen!=null){if(i===ok)cl+=' ok';else if(i===chosen)cl+=' no'}return`<button type="button" class="${cl}" data-o="${i}">${esc(o)}</button>`}).join('')}</div><p class="fb ${chosen!=null?'show '+(chosen===ok?'good':'bad'):''}">${chosen!=null?(chosen===ok?'✓ ':'✗ ')+esc(fb):''}</p></div>`}
+function render(){const s=st(),c=C();renderStepper();let h='';
+ if(s.step===0){h=`<div class="step"><span class="role">Сіздің рөліңіз · Қоғамдық кеңес мүшесі · 2026</span><h2>${esc(c.title)}</h2><p class="lead">${esc(c.desc)}</p><div class="stats">${c.stats.map(x=>`<div class="stat"><b>${esc(x[0])}</b><span>${esc(x[1])}</span></div>`).join('')}</div><p class="quote">«Бүгінгі шешімнің салдарын бізден кейін кім көтереді?»</p><p class="hint">Жоспар: нормамен танысу → дәлелдерді таңдау → 7 қадамдық құқықтық талдау → құқықтық шешім → 25, 50 және 100 жылдан кейінгі салдар. Сол жақтағы бейне мен таразы шешіміңізге қарай өзгереді.</p>${nav(false,true,'Құқықтық негізге өту →')}</div>`}
+ if(s.step===1){h=`<div class="step"><h2>Құқықтық негіз</h2><p class="lead">Бұл іске қолданылатын нормалар:</p><div class="norms">${c.norms.map(n=>`<div class="norm"><b>${esc(n[0])}</b><p>${esc(n[1])}</p></div>`).join('')}<div class="norm prop"><b>${esc(c.prop[0])}</b><p>${esc(c.prop[1])}</p></div></div>${qBlock('norm','Нормаға сұрақ',c.normQ.q,c.normQ.o,s.normA,c.normQ.ok,c.normQ.fb)}${nav(true,true)}</div>`}
+ if(s.step===2){const sel=s.ev,sides=sel.map(i=>c.ev[i][0]);let fb='';if(sel.length===2){fb=sides.includes('benefit')&&(sides.includes('risk')||sides.includes('alt'))?'✓ Жақсы таңдау: пайда мен тәуекелді қатар қарастырдыңыз. Таразының екі жағы да салмақталды.':sides.every(x=>x==='benefit')?'Екі дәлел де тек пайданы көрсетеді. Болашақ ұрпақтың тәуекелі қайда?':'Екі дәлел де тек тәуекелді көрсетеді. Жұмыс орны мен баспана да маңызды. Таразыны теңестіріңіз.'}
+  h=`<div class="step"><h2>Дәлелдер қоржыны</h2><p class="lead">Шешіміңізді негіздейтін <b>екі</b> карточканы таңдаңыз. Деректі болжамнан ажыратыңыз.</p><div class="ev">${c.ev.map((e,i)=>`<button type="button" class="evc ${e[0]} ${sel.includes(i)?'sel':''}" data-ev="${i}"><span class="t">${esc(e[1])}</span>${esc(e[2])}</button>`).join('')}</div><p class="fb ${fb?'show':''}">${esc(fb)}</p><p class="hint">Таңдалды: ${sel.length} / 2</p>${nav(true,true,'',sel.length<2)}</div>`}
+ if(s.step===3){const sc=stepScore(),done=s.ans.filter(x=>x!=null).length;h=`<div class="step"><h2>7 қадамдық құқықтық талдау</h2><p class="lead">Жобаның әсер бағалау алгоритмі. Әр қадамда ең дәл жауапты таңдаңыз.</p>${c.steps.map((x,i)=>qBlock('s'+i,(i+1)+'-қадам · '+x[0],x[1],x[2],s.ans[i],x[3],x[4])).join('')}<p class="hint">Жауап берілді: ${done} / 7 · Дұрысы: ${sc}</p>${nav(true,true,'Шешімге өту →',done<7)}</div>`}
+ if(s.step===4){const d=decObj();h=`<div class="step"><h2>Құқықтық шешім</h2><p class="lead">Бір нұсқаны таңдаңыз. Әр нұсқаның құқықтық негізі көрсетілген.</p><div class="dec">${c.dec.map((x,i)=>`<button type="button" class="dc ${s.dec===i?'sel':''}" data-dec="${i}"><span class="letter">${x.k}</span><strong>${esc(x.t)}</strong><span class="basis">${esc(x.b)}</span></button>`).join('')}</div>
+  <h2 style="margin-top:16px;font-size:16px">Қосымша құқықтық шарттар</h2><p class="hint">${!d?'Алдымен шешімді таңдаңыз.':d.c.length===0?'Бұл нұсқа қосымша шарт қоймайды.':d.c===ALL?'Шартты рұқсатқа барлық шарт қолданылады.':'Тоқтата тұру кезінде тек бақылау, ашықтық, қатысу және ұзақмерзімді бағалау қолданылады.'}</p>
+  <div class="conds">${CONDS.map(x=>{const on=d&&d.c.includes(x.id);return`<label class="cond ${on?'':'off'}"><input type="checkbox" data-cond="${x.id}" ${s.conds.includes(x.id)&&on?'checked':''} ${on?'':'disabled'}><span>${esc(x.label)}<small>⚖ ${esc(x.basis)}</small></span></label>`}).join('')}</div>
+  <h2 style="margin-top:16px;font-size:16px">Шешімімді негіздеймін</h2><textarea id="just" placeholder="Неліктен осы шешімді ұсынасыз? Қай нормаға сүйендіңіз? Болашақ ұрпаққа әсері қандай? (2–4 сөйлем)">${esc(s.just)}</textarea>
+  ${nav(true,true,'Болашақ сотына жіберу →',!d)}</div>`}
+ if(s.step===5){const d=decObj();if(!d){h='<div class="lock">Алдымен 5-қадамда шешім қабылдаңыз.</div>'}else{const m=metrics(),b=badges();
+  h=`<div class="step"><h2>Болашақ сотының үкімі</h2><div class="verdict"><div class="lbl">Сіздің шешіміңіз: ${d.k}</div><p><b>${esc(d.t)}</b></p><p>${esc(d.v)}</p>${missingHint()}</div>
+  <div class="lbl">Уақыт көкжиегі — бейнені жыл бойынша қараңыз</div><div class="years" id="years"></div>
+  <div class="tl-ctrl"><button class="primary" type="button" id="playTL">▶ 100 жылды ойнату</button><label class="switch"><input type="checkbox" id="cmp" ${s.compare?'checked':''}> «Шараларсыз» нұсқамен (A) салыстыру</label></div>
+  <div class="metrics">${[['Табиғи ресурс (2126)',m.env],['Экономика',m.econ],['Құқықтық сәйкестік',m.legal],['Қайтымсыздыққа жол бермеу',m.irrev],['Мониторинг',m.mon],['Қоғамдық қатысу',m.part]].map(x=>`<div class="m"><span>${x[0]}</span><span class="bar"><i style="width:${x[1]}%"></i></span><b>${x[1]}</b></div>`).join('')}</div>
+  <div class="lbl">«Адал азамат» құндылықтары</div><div class="badges">${Object.keys(BADGE_TXT).map(k=>`<div class="badge ${b[k]?'on':''}"><b>${b[k]?'★ ':'☆ '}${BADGE_TXT[k][0]}</b><span>${b[k]?BADGE_TXT[k][1]:'Қалай ашылады: '+HOW[k]}</span></div>`).join('')}</div>
+  <div class="law"><h3>📜 Жобаның заңнамалық ұсынысы</h3><ul>${c.law.map(x=>`<li>${esc(x)}</li>`).join('')}</ul><p class="hint" style="margin:8px 0 0">Ұсынылатын үздік құқықтық шешім: <b>${esc(c.best)}</b>. Талдау дәлдігі: ${stepScore()} / 7.</p></div>
+  ${nav(true,true,'Шешім парағы →')}</div>`}}
+ if(s.step===6){h=d6()}
+ $('stepBody').innerHTML=h;bind();refreshAdal();if(s.step===5&&decObj())renderYears()}
+function missingHint(){const d=decObj();if(!d||d.c.length===0)return'';const miss=d.c.filter(id=>!st().conds.includes(id)).map(id=>CONDS.find(c=>c.id===id).label.toLowerCase());return miss.length?`<p class="hint">Таразыны теңестіру үшін мына шарттарды да қарастырыңыз: ${esc(miss.join('; '))}.</p>`:'<p class="hint">✓ Барлық құқықтық шарт қойылды.</p>'}
+function renderYears(){const el=$('years');if(!el)return;const s=st(),tr=envTraj(s.compare);el.innerHTML=YEARS.map((y,i)=>`<button type="button" class="yb ${s.year===i?'sel':''}" data-y="${i}">${y}<small>${YL[i]} · ${tr[i]}%</small></button>`).join('');el.querySelectorAll('.yb').forEach(b=>b.onclick=()=>setYear(+b.dataset.y,true))}
+function sheet(){const s=st(),c=C(),d=decObj(),m=metrics(),b=badges();const L=[];
+ L.push('ҰРПАҚТАР ТАРАЗЫСЫ — ШЕШІМ ПАРАҒЫ','Жағдаят: '+c.title,'Рөл: қоғамдық кеңес мүшесі','');
+ L.push('1. Норма бойынша сұрақ: '+(s.normA==null?'жауап жоқ':(s.normA===c.normQ.ok?'дұрыс':'қате')+' ('+c.normQ.o[s.normA]+')'));
+ L.push('2. Таңдалған дәлелдер: '+(s.ev.length?s.ev.map(i=>c.ev[i][1]+': '+c.ev[i][2]).join(' | '):'жоқ'));
+ L.push('3. 7 қадамдық талдау: '+stepScore()+' / 7 дұрыс');c.steps.forEach((x,i)=>L.push('   '+(i+1)+') '+x[0]+': '+(s.ans[i]==null?'—':x[2][s.ans[i]])));
+ L.push('4. Құқықтық шешім: '+(d?d.k+'. '+d.t:'қабылданбады'));if(d){L.push('   Құқықтық негізі: '+d.b);const cs=activeConds();L.push('   Шарттар: '+(cs.length?cs.map(x=>x.label+' ('+x.basis+')').join('; '):'жоқ'))}
+ L.push('   Негіздеме: '+(s.just.trim()||'жазылмаған'),'');
+ if(m){const tr=envTraj();L.push('5. Болашақ соты: орта жағдайы '+YEARS.map((y,i)=>y+' — '+tr[i]+'%').join(', '));L.push('   Болашақ ұрпақ индексі: '+m.index+'/100 (экономика '+m.econ+', құқықтық сәйкестік '+m.legal+', қайтымсыздыққа жол бермеу '+m.irrev+', мониторинг '+m.mon+', қатысу '+m.part+')');L.push('   Үкім: '+d.v);L.push('   «Адал азамат» құндылықтары: '+(Object.keys(b).filter(k=>b[k]).map(k=>BADGE_TXT[k][0]).join(', ')||'—'))}
+ L.push('','Жобаның заңнамалық ұсынысы:');c.law.forEach(x=>L.push(' • '+x));L.push('','Ескерту: сандар мен индекс — шартты оқу материалы, ресми заңгерлік қорытынды емес.');return L.join('\n')}
+function d6(){return`<div class="step" id="step7"><h2>Менің шешім парағым</h2><p class="lead">Парақты жүктеп алып немесе басып шығарып, мұғалімге тапсырыңыз.</p><div class="sheet" id="sheet">${esc(sheet())}</div><div class="nav"><button class="small-btn" type="button" data-go="5">← Артқа</button><span style="display:flex;gap:8px;flex-wrap:wrap"><button class="small-btn" type="button" id="dl">↓ Жүктеу (.txt)</button><button class="small-btn" type="button" id="pr">🖨 Басып шығару</button><button class="primary" type="button" id="nextCase">Келесі жағдаят →</button></span></div></div>`}
+const lit={};
+function toast(t){let el=$('toast');if(!el){el=document.createElement('div');el.id='toast';el.className='toast';document.body.append(el)}el.textContent=t;el.classList.add('show');clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('show'),2600)}
+function refreshAdal(){const b=badges(),prev=lit[topic]||{};document.querySelectorAll('.val').forEach(el=>{const k=el.dataset.v;el.classList.toggle('on',!!b[k]);el.title=b[k]?BADGE_TXT[k][1]:'Қалай ашылады: '+HOW[k];if(b[k]&&!prev[k]&&lit[topic]){toast('★ «Адал азамат»: '+BADGE_TXT[k][0]+' — '+BADGE_TXT[k][1].toLowerCase());el.classList.add('pop');setTimeout(()=>el.classList.remove('pop'),900)}});$('adalCount').textContent=Object.values(b).filter(Boolean).length+' / 6';lit[topic]=b}
+function bind(){const s=st(),c=C();
+ document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(+b.dataset.go));
+ document.querySelectorAll('.q').forEach(q=>q.querySelectorAll('.opt').forEach(o=>o.onclick=()=>{const id=q.dataset.q,v=+o.dataset.o;if(id==='norm')s.normA=v;else s.ans[+id.slice(1)]=v;const y=window.scrollY;render();window.scrollTo(0,y)}));
+ document.querySelectorAll('[data-ev]').forEach(e=>e.onclick=()=>{const i=+e.dataset.ev;const k=s.ev.indexOf(i);if(k>=0)s.ev.splice(k,1);else{if(s.ev.length>=2)s.ev.shift();s.ev.push(i)}render()});
+ document.querySelectorAll('[data-dec]').forEach(e=>e.onclick=()=>{s.dec=+e.dataset.dec;s.year=0;s.compare=false;render();refreshLeft();seekPct(100)});
+ document.querySelectorAll('[data-cond]').forEach(e=>e.onchange=()=>{const id=e.dataset.cond;if(e.checked){if(!s.conds.includes(id))s.conds.push(id)}else s.conds=s.conds.filter(x=>x!==id);refreshLeft();refreshAdal()});
+ const j=$('just');if(j)j.oninput=()=>{s.just=j.value;refreshAdal()};
+ const pl=$('playTL');if(pl)pl.onclick=()=>{let i=0;const seq=()=>{setYear(i,false);if(i===0){seekPct(100);i++;setTimeout(seq,500);return}const p=envTraj(s.compare)[i];s.year=i;refreshLeft();renderYears();playTo(p,()=>{i++;if(i<4)setTimeout(seq,700)},1.5)};seekPct(100);s.year=0;seq()};
+ const cm=$('cmp');if(cm)cm.onchange=()=>{s.compare=cm.checked;setYear(s.year,true);};
+ const dl=$('dl');if(dl)dl.onclick=()=>{const blob=new Blob([sheet()],{type:'text/plain;charset=utf-8'}),u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download='Urpaqtar_tarazysy_sheshim_'+topic+'.txt';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1500)};
+ const pr=$('pr');if(pr)pr.onclick=()=>window.print();
+ const nc=$('nextCase');if(nc)nc.onclick=()=>switchCase(ORDER[(ORDER.indexOf(topic)+1)%3])}
+function go(i){const s=st();if(i<0||i>6||!canGo(i))return;s.step=i;s.visited[i]=true;render();if(i===5&&decObj()){setYear(s.year,true)}else if(i<5){s.year=0;refreshLeft();if(curPct!==100)playTo(100)}const p=document.querySelector('.panel');if(p&&window.innerWidth<1100)p.scrollIntoView({behavior:'smooth',block:'start'})}
+function switchCase(k){halt();topic=k;curPct=100;setTopicLabels();showPct(100);renderCases();$('sceneLabel').textContent=C().label;render();refreshLeft();loadVideo().then(()=>{if(st().step===5&&decObj())setYear(st().year,false)})}
+$('fsBtn').onclick=()=>{const e=$('app');if(!document.fullscreenElement)(e.requestFullscreen||e.webkitRequestFullscreen)?.call(e);else(document.exitFullscreen||document.webkitExitFullscreen)?.call(document)};
+$('lvl').addEventListener('input',()=>seekPct(+$('lvl').value));
+$('declineBtn').onclick=()=>{if(playing===1){halt();return}playTo(0)};
+$('recoverBtn').onclick=()=>{if(playing===-1){halt();return}playTo(100)};
+$('pauseBtn').onclick=()=>halt();
+$('beforeBtn').onclick=()=>{vis(V.f);seekPct(100)};$('afterBtn').onclick=()=>{vis(V.f);seekPct(0)};
+$('backDec').onclick=()=>{const s=st();if(decObj()){setYear(s.year,true)}else{playTo(100)}};
+$('speed').onchange=()=>{V.f.playbackRate=V.r.playbackRate=rate()};
+window.addEventListener('keydown',e=>{if(e.target.matches('input,select,textarea,button'))return;if(e.key==='ArrowLeft'){e.preventDefault();seekPct(curPct-5)}if(e.key==='ArrowRight'){e.preventDefault();seekPct(curPct+5)}});
+const DEMO_JUST={lake:'Шартты рұқсат береміз: 600 жұмыс орны да, ауызсу да маңызды. Кодекстің 5-бабы бойынша ластаушы төлейді, сондықтан компания кепілдік қорын алдын ала құрып, жабық су айналымын енгізуі тиіс. Сонда болашақ ұрпақ та таза суға қол жеткізеді.',pollution:'Кен өндіруге рұқсат береміз, бірақ өндіріс басталмай тұрып қалпына келтіру қоры құрылуы тиіс. Қалдық 100 жылдан астам қауіпті, сондықтан «ластаушы төлейді» қағидаты келешек ұрпақ алдында да орындалуы керек.',forest:'Тығыз құрылысты ұсынамыз: баспана салынады, ал орманның 80%-ы мен жасыл дәліз сақталады. 241-бап бойынша шығынның орны басқа облыста емес, дәл осы қалада толтырылуы керек.'};
+function demo(){const s=st(),c=C();s.normA=c.normQ.ok;const bi=c.ev.findIndex(e=>e[0]==='benefit'),ri=c.ev.findIndex(e=>e[0]==='risk');s.ev=[bi,ri];s.ans=c.steps.map(x=>x[3]);s.dec=c.dec.findIndex(x=>x.c===ALL);s.conds=ALL.slice();s.just=DEMO_JUST[topic];s.visited=s.visited.map(()=>true);s.compare=false;s.year=0;s.step=5;render();refreshLeft();seekPct(100);
+ setTimeout(()=>{setYear(3,true)},500);toast('🎬 Демо: '+c.name+' · шешім B, барлық шарт қойылды')}
+$('demoBtn').onclick=()=>{if(ready)demo();else{const w=setInterval(()=>{if(ready){clearInterval(w);demo()}},200)}};
+window.__t={S,switchCase,go,metrics,envTraj,ready:()=>ready,pct:()=>curPct,topic:()=>topic};
+switchCase('lake');
+})();
+</script></body></html>
